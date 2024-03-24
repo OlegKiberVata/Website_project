@@ -3,6 +3,7 @@ from root.forms.registratform import RegistrForm
 from root.forms.profileform import ChangeProfileForm
 from root.forms.enterform import EnterForm
 from root.forms.redact_form import RedactForm
+from root.forms.createform import CreateForm
 app = Flask(__name__)
 app.config['SECRET_KEY'] = 'yandexlyceum_secret_key'
 persons = {}
@@ -24,6 +25,19 @@ def profile(person):
 def note(person, choosen_note):
     global persons
     return render_template('note.html', title="Просмотр записи", note=persons[person][2][choosen_note])
+
+
+@app.route("/note_creation/<person>")
+def create(person):
+    global persons
+    form = CreateForm()
+    if form.validate_on_submit() and form.submit:
+        persons[person][2][form.name.data] = [form.name.data, form.info.data, form.date.data]
+        # apply_data(persons[person]), передаю тебе штуки, чтобы занес в базу данных
+        return redirect(f'/home/{person}')
+    if form.back:
+        return redirect(f'/home/{person}')
+    return render_template('create_note.html', title="Создание записи", person=person, note=note)
 
 
 @app.route("/profile_change/<person>")
