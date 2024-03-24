@@ -11,5 +11,4 @@ class ChangeProfileForm(FlaskForm):
     email = StringField('Почта', validators=[DataRequired()])
     password = StringField('Пароль', validators=[DataRequired()])
     phone_number = StringField("Номер телефона")
-    back = SubmitField('Назад')
     submit = SubmitField('Сохранить')
