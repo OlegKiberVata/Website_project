@@ -1,8 +1,8 @@
 from flask import Flask, render_template, redirect
-from registratform import RegistrForm
-from profileform import ChangeProfileForm
-from enterform import EnterForm
-from redact_form import RedactForm
+from root.forms.registratform import RegistrForm
+from root.forms.profileform import ChangeProfileForm
+from root.forms.enterform import EnterForm
+from root.forms.redact_form import RedactForm
 app = Flask(__name__)
 app.config['SECRET_KEY'] = 'yandexlyceum_secret_key'
 persons = {}
