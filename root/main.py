@@ -7,6 +7,7 @@ from root.forms.createform import CreateForm
 app = Flask(__name__)
 app.config['SECRET_KEY'] = 'yandexlyceum_secret_key'
 persons = {}
+person = None
 
 
 @app.route('/home/<person>')
@@ -31,11 +32,9 @@ def note(person, choosen_note):
 def create(person):
     global persons
     form = CreateForm()
-    if form.validate_on_submit() and form.submit:
+    if form.validate_on_submit():
         persons[person][2][form.name.data] = [form.name.data, form.info.data, form.date.data]
         # apply_data(persons[person]), передаю тебе штуки, чтобы занес в базу данных
-        return redirect(f'/home/{person}')
-    if form.back:
         return redirect(f'/home/{person}')
     return render_template('create_note.html', title="Создание записи", person=person, note=note)
 
@@ -44,12 +43,10 @@ def create(person):
 def change(person):
     global persons
     form = ChangeProfileForm()
-    if form.validate_on_submit() and form.submit:
+    if form.validate_on_submit():
         persons[person][3] = [form.name.data, form.surname.data, form.email.data,
                               form.password.data, form.gender.data, form.phone_number.data, form.age.data]
         # apply_data(persons[person]), передаю тебе штуки, чтобы занес в базу данных
-        return redirect(f'/home/{person}')
-    if form.back:
         return redirect(f'/home/{person}')
     return render_template('change_prof.html', title="Смена данных пользователя", person=persons[person])
 
@@ -58,11 +55,9 @@ def change(person):
 def redact(person, note):
     global persons
     form = RedactForm()
-    if form.validate_on_submit() and form.submit:
+    if form.validate_on_submit():
         persons[person][3] = [form.name.data, form.info.data, form.date.data]
         # apply_data(persons[person]), передаю тебе штуки, чтобы занес в базу данных
-        return redirect(f'/home/{person}')
-    if form.back:
         return redirect(f'/home/{person}')
     return render_template('redact_note.html', title="Редактирование записи", person=person, note=note)
 
