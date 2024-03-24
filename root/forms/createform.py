@@ -7,5 +7,4 @@ class CreateForm(FlaskForm):
     name = StringField('Название', validators=[DataRequired()])
     info = StringField("Данные", validators=[DataRequired()])
     date = DateTimeField('Дата напоминания', validators=[DataRequired()])
-    back = SubmitField('Назад')
     submit = SubmitField('Сохранить')
