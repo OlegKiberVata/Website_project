@@ -3,8 +3,8 @@
             <meta charset="UTF-8">
             {% if person != "None" %}
                 <h1><a href="http://127.0.0.1:8080/note_creation/{{ person }}">Создать запись</a></h1>
-                {% for name in notes %}
-                        <li><a href="http://127.0.0.1:8080/redact_note/{{ person }}/{{ name }}">{{ name }}</a><h2>: {{ notes[name][1] }}</h2></li>
+                {% for id in notes %}
+                        <li><a href="http://127.0.0.1:8080/redact_note/{{ person }}/{{ id }}">{{ notes[id][0] }}</a><h2>: {{ notes[name][1] }}</h2></li>
                 {% endfor %}
             {% else %}
                 <h1>Войдите в аккаунт для создания и просмотра записей</h1>
