@@ -1,0 +1,9 @@
+{% extends "base.html" %}
+        {% block content %}
+            <meta charset="UTF-8">
+            {% for item in profile %}
+                        <li>{{ item }}</li>
+            {% endfor %}
+            <h1><a href="http://127.0.0.1:8080/profile_change/{{ person }}">Редактировать</a></h1>
+            <h1><a href="http://127.0.0.1:8080/home/{{ person }}">Назад</a></h1>
+        {% endblock %}

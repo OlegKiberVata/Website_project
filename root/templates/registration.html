@@ -1,0 +1,18 @@
+{% extends "base.html" %}
+{% block content %}
+    <form action="" method="post" novalidate>
+        <div>
+            {{ form.csrf_token }}
+        </div>
+        {% for field in form if field.name != 'csrf_token' %}
+            <div>
+                {{ field.label() }}
+                {{ field() }}
+                {% for error in field.errors %}
+                    <div class="error">{{ error }}</div>
+                {% endfor %}
+            </div>
+        {% endfor %}
+    </form>
+    <h1><a href="http://127.0.0.1:8080/enter">Уже есть аккаунт? Войти</a></h1>
+{% endblock %}
