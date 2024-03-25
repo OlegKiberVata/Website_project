@@ -6,14 +6,14 @@ from root.forms.redact_form import RedactForm
 from root.forms.createform import CreateForm
 app = Flask(__name__)
 app.config['SECRET_KEY'] = 'yandexlyceum_secret_key'
-persons = {}
-person = None
+persons = {"None": [1, 2, 3]}
+person = "None"
 
 
 @app.route('/home/<person>')
 def home_page(person):
     global persons
-    return render_template('home.html', title='Главная страница', person=person)
+    return render_template('home.html', title='Главная страница', person=person, notes=persons[person][2])
 
 
 @app.route("/profile/<person>")
@@ -36,7 +36,7 @@ def create(person):
         persons[person][2][form.name.data] = [form.name.data, form.info.data, form.date.data]
         # apply_data(persons[person]), передаю тебе штуки, чтобы занес в базу данных
         return redirect(f'/home/{person}')
-    return render_template('create_note.html', title="Создание записи", person=person, note=note)
+    return render_template('create_note.html', title="Создание записи", person=person, form=form)
 
 
 @app.route("/profile_change/<person>", methods=['GET', 'POST'])
@@ -56,10 +56,10 @@ def redact(person, note):
     global persons
     form = RedactForm()
     if form.validate_on_submit():
-        persons[person][3] = [form.name.data, form.info.data, form.date.data]
+        persons[person][2][note] = [note, form.info.data, form.date.data]
         # apply_data(persons[person]), передаю тебе штуки, чтобы занес в базу данных
         return redirect(f'/home/{person}')
-    return render_template('redact_note.html', title="Редактирование записи", person=person, note=note)
+    return render_template('redact_note.html', title="Редактирование записи", person=person, form=form)
 
 
 @app.route('/registration', methods=['GET', 'POST'])  # регистрация
@@ -67,7 +67,7 @@ def registration():
     global persons
     form = RegistrForm()
     if form.validate_on_submit():  # and Check_registr([form.login.data, form.email.data, form.password.data]):, я передаю данные, ты проверяешь свободны ли они
-        persons[form.login.data] = [form.password.data, form.email.data, {0: "Первая запись"}, ["Имя", "Фамилия", "Пол", "Возраст", "Почта", "Пароль", "Номер"]]  # Сохраняем данные пользователя в таком порядке: пароль, почта, записи, штуки для профиля
+        persons[form.login.data] = [form.password.data, form.email.data, {"Нажмите для редактирования": ["Нажмите для редактирования", "Это просто текст"]}, ["Имя", "Фамилия", "Пол", "Возраст", "Почта", "Пароль", "Номер"]]  # Сохраняем данные пользователя в таком порядке: пароль, почта, записи, штуки для профиля
         # apply_data(persons[form.login.data]), передаю тебе штуки, чтобы занес в базу данных
         return redirect('/enter')
     return render_template('registration.html', form=form, title='Регистрация', person="None")
