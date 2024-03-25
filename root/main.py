@@ -2,12 +2,12 @@ from flask import Flask, render_template, redirect
 from root.forms.registratform import RegistrForm
 from root.forms.profileform import ChangeProfileForm
 from root.forms.enterform import EnterForm
-from root.forms.redact_form import RedactForm
 from root.forms.createform import CreateForm
 app = Flask(__name__)
 app.config['SECRET_KEY'] = 'yandexlyceum_secret_key'
 persons = {"None": [1, 2, 3]}
 person = "None"
+idd = 1
 
 
 @app.route('/home/<person>')
@@ -31,9 +31,11 @@ def note(person, choosen_note):
 @app.route("/note_creation/<person>", methods=['GET', 'POST'])
 def create(person):
     global persons
+    global idd
     form = CreateForm()
     if form.validate_on_submit():
-        persons[person][2][form.name.data] = [form.name.data, form.info.data, form.date.data]
+        persons[person][2][idd] = [form.name.data, form.info.data, form.date.data]
+        idd += 1
         # apply_data(persons[person]), передаю тебе штуки, чтобы занес в базу данных
         return redirect(f'/home/{person}')
     return render_template('create_note.html', title="Создание записи", person=person, form=form)
@@ -51,12 +53,12 @@ def change(person):
     return render_template('change_prof.html', title="Смена данных пользователя", info=persons[person], person=person, form=form)
 
 
-@app.route("/redact_note/<person>/<note>", methods=['GET', 'POST'])
-def redact(person, note):
+@app.route("/redact_note/<person>/<idi>", methods=['GET', 'POST'])
+def redact(person, idi):
     global persons
-    form = RedactForm()
+    form = CreateForm()
     if form.validate_on_submit():
-        persons[person][2][note] = [note, form.info.data, form.date.data]
+        persons[person][2][idi] = [form.name.data, form.info.data, form.date.data]
         # apply_data(persons[person]), передаю тебе штуки, чтобы занес в базу данных
         return redirect(f'/home/{person}')
     return render_template('redact_note.html', title="Редактирование записи", person=person, form=form)
@@ -67,7 +69,7 @@ def registration():
     global persons
     form = RegistrForm()
     if form.validate_on_submit():  # and Check_registr([form.login.data, form.email.data, form.password.data]):, я передаю данные, ты проверяешь свободны ли они
-        persons[form.login.data] = [form.password.data, form.email.data, {"Нажмите для редактирования": ["Нажмите для редактирования", "Это просто текст"]}, ["Имя", "Фамилия", "Пол", "Возраст", "Почта", "Пароль", "Номер"]]  # Сохраняем данные пользователя в таком порядке: пароль, почта, записи, штуки для профиля
+        persons[form.login.data] = [form.password.data, form.email.data, {0: ["Нажмите для редактирования", "Это просто текст"]}, ["Имя", "Фамилия", "Пол", "Возраст", "Почта", "Пароль", "Номер"]]  # Сохраняем данные пользователя в таком порядке: пароль, почта, записи, штуки для профиля
         # apply_data(persons[form.login.data]), передаю тебе штуки, чтобы занес в базу данных
         return redirect('/enter')
     return render_template('registration.html', form=form, title='Регистрация', person="None")
